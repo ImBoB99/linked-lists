@@ -9,24 +9,24 @@ class LinkedList {
   }
 
   append(value) {
-    let lastNode = this.head;
-    if (lastNode === null) {
+    let currentNode = this.head;
+    if (currentNode === null) {
       let newNode = new Node(value);
-      lastNode = newNode;
+      this.head = newNode;
     } else {
-      while (lastNode.nextNode !== null) {
-        lastNode = lastNode.nextNode;
+      while (currentNode.nextNode !== null) {
+        currentNode = currentNode.nextNode;
       }
       let newNode = new Node(value);
-      lastNode.nextNode = newNode;
+      currentNode.nextNode = newNode;
     }
   }
 
   size() {
-    let node = this.head; // linkedList start node
+    let currentNode = this.head; // linkedList start node
     let counter = 0;
-    while (node !== null) {
-      node = node.nextNode;
+    while (currentNode !== null) {
+      currentNode = currentNode.nextNode;
       counter++;
     }
     return counter;
@@ -37,26 +37,26 @@ class LinkedList {
   }
 
   getTail() {
-    let node = this.head;
-    if (node) {
-      while (node.nextNode) {
-        node = node.nextNode;
+    let currentNode = this.head;
+    if (currentNode) {
+      while (currentNode.nextNode) {
+        currentNode = currentNode.nextNode;
       }
     }
-    return node;
+    return currentNode;
   }
 
   at(index) {
     if (index < 0) return null; // Handle negative indexes
 
-    let node = this.head; // Start at the head
+    let currentNode = this.head; // Start at the head
 
     // Traverse the list with a for loop
-    for (let i = 0; i < index && node !== null; i++) {
-      node = node.nextNode; // Move to the next node
+    for (let i = 0; i < index && currentNode !== null; i++) {
+      currentNode = currentNode.nextNode; // Move to the next node
     }
 
-    return node; // Return the node if found, otherwise null
+    return currentNode; // Return the node if found, otherwise null
   }
 
   pop() {
@@ -67,16 +67,93 @@ class LinkedList {
       return this.head;
     }
 
-    let current = this.head;
+    let currentNode = this.head;
     let previous = null;
 
-    while (current.nextNode !== null) {
-      previous = current;
-      current = current.nextNode;
+    while (currentNode.nextNode !== null) {
+      previous = currentNode;
+      currentNode = currentNode.nextNode;
     }
 
     previous.nextNode = null; // remove the last node
     return this.head;
+  }
+
+  contains(value) {
+    let currentNode = this.head;
+
+    while (currentNode !== null) {
+      if (currentNode.value === value) {
+        return true
+      } else if (currentNode.nextNode === null) {
+        return false
+      } else {
+        currentNode = currentNode.nextNode;
+      }
+    }
+  }
+
+  find(value) {
+    let currentNode = this.head;
+    let counter = 0;
+    while (currentNode !== null) {
+      if (currentNode.value === value) {
+        return counter;
+      } else if (currentNode.nextNode === null) {
+        return "Node with this value not found"
+      } else {
+        currentNode = currentNode.nextNode;
+        counter++
+      }
+    }
+  }
+
+  toString() {
+    let currentNode = this.head;
+    let result = "";
+
+    while (currentNode !== null) {
+      result += `( ${currentNode.value} ) -> `
+      currentNode = currentNode.nextNode;
+      if (currentNode === null) {
+        result += `( null )`
+      }
+    }
+    return result;
+  }
+
+  insertAt(value, index) {
+    if (index === 0) {
+      // Inserting at the head
+      let newNode = new Node(value, this.head);
+      this.head = newNode;
+      return;
+    }
+
+    let previousNode = this.at(index - 1);
+    if (!previousNode || !previousNode.nextNode) {
+      throw new Error("Index out of bounds");
+    }
+
+    let newNode = new Node(value, previousNode.nextNode);
+    previousNode.nextNode = newNode;
+
+  }
+
+  removeAt(index) {
+    if (index === 0) {
+      this.head = this.head.nextNode;
+      return;
+    }
+
+    let previousNode = this.at(index - 1);
+    let currentNode = this.at(index);
+
+    if (!previousNode || !previousNode.nextNode) {
+      throw new Error("Index out of bounds");
+    }
+
+    previousNode.nextNode = currentNode.nextNode;
   }
 }
 
@@ -87,20 +164,24 @@ class Node {
   }
 }
 
-let list = new LinkedList();
-list.prepend(1);
-list.append(2);
-list.append(3);
-list.append(4);
-console.log(`List size: ${list.size()}`);
-console.log(list.getHead());
-console.log(list.getTail());
-console.log(list.at(0));
-console.log(list.pop());
+// example uses class syntax
+const list = new LinkedList();
+
+list.append("dog");
+list.append("cat");
+list.append("parrot");
+list.append("hamster");
+list.append("snake");
+list.append("turtle");
+
+// console.log(`List size: ${list.size()}`);
+// console.log(list.getHead());
+// console.log(list.getTail());
+// console.log(list.at(1));
+// console.log(list.pop());
+// console.log(list.contains(5));
+// console.log(list.find(3));
+// console.log(list.removeAt(5))
 console.log(`List size: ${list.size()}`);
 
-let node = list.head;
-while (node !== null) {
-  console.log(node.value); // Output: 5, 10, 20
-  node = node.nextNode;
-}
+console.log(list.toString())

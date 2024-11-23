@@ -60,7 +60,23 @@ class LinkedList {
   }
 
   pop() {
-    //
+    if (!this.head) return undefined;
+
+    if (this.head.nextNode === null) {
+      this.head = null;
+      return this.head;
+    }
+
+    let current = this.head;
+    let previous = null;
+
+    while (current.nextNode !== null) {
+      previous = current;
+      current = current.nextNode;
+    }
+
+    previous.nextNode = null; // remove the last node
+    return this.head;
   }
 }
 
@@ -73,13 +89,15 @@ class Node {
 
 let list = new LinkedList();
 list.prepend(1);
-list.append(10);
-list.append(20);
-list.prepend(5);
+list.append(2);
+list.append(3);
+list.append(4);
 console.log(`List size: ${list.size()}`);
 console.log(list.getHead());
 console.log(list.getTail());
 console.log(list.at(0));
+console.log(list.pop());
+console.log(`List size: ${list.size()}`);
 
 let node = list.head;
 while (node !== null) {
